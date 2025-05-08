@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BeeRoots</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-yellow-50 text-gray-800 min-h-screen">
@@ -13,25 +14,19 @@
   </header>
 
   <main class="max-w-3xl mx-auto px-4 py-8 space-y-10">
-
     
     <!-- Adicionar Meta -->
     <section class="bg-white rounded-xl shadow-md p-6">
-        
       <h2 class="text-2xl font-semibold mb-4">Adicionar Meta</h2>
       <form id="metaForm" class="space-y-4">
-        <input type="text" id="titulo" placeholder="Título da Meta" required
-          class="w-full p-3 border border-gray-300 rounded-lg" />
-        <textarea id="descricao" placeholder="Descrição"
-          class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+        <input type="text" id="titulo" placeholder="Título da Meta" required class="w-full p-3 border border-gray-300 rounded-lg" />
+        <textarea id="descricao" placeholder="Descrição" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <label class="flex flex-col">Prazo:
-            <input type="date" id="prazo" required
-              class="p-2 mt-1 border border-gray-300 rounded-lg" />
+            <input type="date" id="prazo" required class="p-2 mt-1 border border-gray-300 rounded-lg" />
           </label>
           <label class="flex flex-col">Tipo:
-            <select id="tipo"
-              class="p-2 mt-1 border border-gray-300 rounded-lg">
+            <select id="tipo" class="p-2 mt-1 border border-gray-300 rounded-lg">
               <option value="curto">Curto Prazo</option>
               <option value="medio">Médio Prazo</option>
               <option value="longo">Longo Prazo</option>
@@ -42,10 +37,7 @@
             Prioridade (Abelha)
           </label>
         </div>
-        <button type="submit"
-          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition">
-          Adicionar
-        </button>
+        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition">Adicionar</button>
       </form>
     </section>
 
@@ -68,12 +60,16 @@
       <ul id="listaMetas" class="space-y-3"></ul>
     </section>
 
+    <!-- Histórico -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4">Histórico de Metas Concluídas</h2>
+      <ul id="historicoMetas" class="space-y-3"></ul>
+    </section>
+
     <!-- Árvore -->
     <section class="bg-white rounded-xl shadow-md p-6 text-center">
       <h2 class="text-2xl font-semibold mb-4">Minha Árvore</h2>
-      <img id="imagemArvore" src="assets/images/arvore1.png"
-        alt="Árvore Virtual"
-        class="mx-auto w-32 sm:w-40 md:w-48 transition-all duration-300" />
+      <img id="imagemArvore" src="assets/images/arvore1.png" alt="Árvore Virtual" class="mx-auto w-32 sm:w-40 md:w-48 transition-all duration-300" />
     </section>
 
     <!-- Jardim -->
@@ -93,5 +89,4 @@
   <script src="script.js"></script>
 </body>
 </html>
-
 
