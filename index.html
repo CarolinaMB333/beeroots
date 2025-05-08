@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeeRoots</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 text-gray-800 min-h-screen">
+  <header class="bg-yellow-300 text-center py-6 shadow">
+    <h1 class="text-4xl font-bold">🐝 BeeRoots</h1>
+    <p class="text-lg mt-2">Suas metas, suas raízes.</p>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 space-y-10">
+
+    
+    <!-- Adicionar Meta -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+        
+      <h2 class="text-2xl font-semibold mb-4">Adicionar Meta</h2>
+      <form id="metaForm" class="space-y-4">
+        <input type="text" id="titulo" placeholder="Título da Meta" required
+          class="w-full p-3 border border-gray-300 rounded-lg" />
+        <textarea id="descricao" placeholder="Descrição"
+          class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <label class="flex flex-col">Prazo:
+            <input type="date" id="prazo" required
+              class="p-2 mt-1 border border-gray-300 rounded-lg" />
+          </label>
+          <label class="flex flex-col">Tipo:
+            <select id="tipo"
+              class="p-2 mt-1 border border-gray-300 rounded-lg">
+              <option value="curto">Curto Prazo</option>
+              <option value="medio">Médio Prazo</option>
+              <option value="longo">Longo Prazo</option>
+            </select>
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="checkbox" id="prioridade" class="w-5 h-5" />
+            Prioridade (Abelha)
+          </label>
+        </div>
+        <button type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition">
+          Adicionar
+        </button>
+      </form>
+    </section>
+
+    <!-- Filtros e Ordenação -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+        <select id="filtro" class="border p-2 rounded-lg">
+          <option value="todas">Todas</option>
+          <option value="prioridade">Prioritárias 🐝</option>
+          <option value="curto">Curto Prazo</option>
+          <option value="medio">Médio Prazo</option>
+          <option value="longo">Longo Prazo</option>
+        </select>
+        <select id="ordenacao" class="border p-2 rounded-lg">
+          <option value="prazo">Ordenar por Prazo</option>
+          <option value="tipo">Ordenar por Tipo</option>
+        </select>
+      </div>
+      <h2 class="text-2xl font-semibold mb-4">Minhas Metas</h2>
+      <ul id="listaMetas" class="space-y-3"></ul>
+    </section>
+
+    <!-- Árvore -->
+    <section class="bg-white rounded-xl shadow-md p-6 text-center">
+      <h2 class="text-2xl font-semibold mb-4">Minha Árvore</h2>
+      <img id="imagemArvore" src="assets/images/arvore1.png"
+        alt="Árvore Virtual"
+        class="mx-auto w-32 sm:w-40 md:w-48 transition-all duration-300" />
+    </section>
+
+    <!-- Jardim -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4">Meu Jardim</h2>
+      <div id="jardim" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- Conquistas -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-2xl font-semibold mb-4">Minhas Conquistas</h2>
+      <div id="medalhas" class="flex gap-4 text-3xl"></div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+

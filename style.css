@@ -1,0 +1,67 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefbe9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #ffd700;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+.form-section, .calendario, .arvore {
+  margin: 20px;
+  padding: 20px;
+  background-color: #fffde7;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+form input, form textarea, form select {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+form button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #90ee90;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #66bb6a;
+}
+
+#listaMetas li {
+  list-style: none;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+#listaMetas li.curto {
+  background-color: #d0f0c0;
+}
+
+#listaMetas li.medio {
+  background-color: #f0e68c;
+}
