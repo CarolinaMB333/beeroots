@@ -24,8 +24,8 @@ function salvarDados() {
 function atualizarArvore() {
   const metasFalhadas = metas.filter(meta => meta.status === "falhou");
   imagemArvore.src = metasFalhadas.length > 0
-    ? "assets/images/arvore_morta1.png"
-    : `assets/images/arvore${Math.min(arvoreNivel, 5)}.png`;
+    ? "assets/imagens/arvore_morta1.png"
+    : `assets/imagens/arvore${Math.min(arvoreNivel, 5)}.png`;
 }
 
 // Atualiza o jardim
@@ -34,11 +34,13 @@ function atualizarJardim() {
   jardim.forEach(arvore => {
     const container = document.createElement("div");
     container.className = "text-center";
-    container.innerHTML = `
-      <img src="assets/images/${arvore.imagem}" class="w-20 mx-auto" />
+    if (arvoreNivel === 5) {
+      container.innerHTML = `
+      <img src="assets/imagens/penai.png" class="w-20 mx-auto" />
       <p class="text-sm text-gray-500 mt-1">🌿 ${arvore.data}</p>
     `;
-    divJardim.appendChild(container);
+      divJardim.appendChild(container);
+    }
   });
 }
 
@@ -90,7 +92,7 @@ function renderizarHistorico() {
       <small>${meta.descricao}</small><br>
       <small>Status: ✅ Concluída</small>
     `;
-    historicoMetas.appendChild(li);
+    historicoMetas.insertBefore(li, historicoMetas.firstChild);
   });
 }
 
