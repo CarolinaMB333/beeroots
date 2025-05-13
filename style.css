@@ -1,34 +1,77 @@
+/* Estrutura Geral */
 body {
   font-family: Arial, sans-serif;
-  background-color: #fefbe9;
+  background-color: #fefbe9; /* cor de fundo suave */
   color: #333;
   margin: 0;
   padding: 0;
 }
 
-header {
+.bg-beeroots-bg {
+  background-color: #fefbe9;
+}
+
+.text-beeroots-text {
+  color: #1f2937;
+}
+
+/* Cabeçalho */
+header,
+.bg-beeroots-header {
   background-color: #ffd700;
   text-align: center;
   padding: 20px;
 }
 
+/* Títulos */
 h1 {
   margin: 0;
   font-size: 2.5em;
 }
 
-form input, form textarea, form select {
-  display: block;
+.titulo-secao {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Container principal */
+.container-beeroots {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Cartões (seções) */
+.card-beeroots {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulário */
+.form-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input-meta {
   width: 100%;
-  margin-top: 10px;
-  padding: 10px;
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1em;
 }
 
-form button {
-  margin-top: 15px;
+.checkbox-prioridade {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-adicionar {
+  margin-top: 10px;
   padding: 10px 20px;
   background-color: #90ee90;
   border: none;
@@ -38,22 +81,93 @@ form button {
   transition: background-color 0.3s;
 }
 
-form button:hover {
+.btn-adicionar:hover {
   background-color: #66bb6a;
 }
 
-#listaMetas li,
-#historicoMetas li {
+/* Filtros */
+.filtros-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .filtros-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.select-filtro {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+/* Listas de metas */
+.lista-metas li,
+.lista-historico li {
   list-style: none;
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 10px;
 }
 
-#listaMetas li.curto {
+.lista-metas li.curto {
   background-color: #d0f0c0;
 }
 
-#listaMetas li.medio {
+.lista-metas li.medio {
   background-color: #f0e68c;
+}
+
+.lista-metas li.longo {
+  background-color: #f4cccc;
+}
+
+/* Árvore */
+.imagem-arvore {
+  margin: 0 auto;
+  width: 8rem;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .imagem-arvore {
+    width: 10rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .imagem-arvore {
+    width: 12rem;
+  }
+}
+
+/* Jardim */
+.grid-jardim {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .grid-jardim {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-jardim {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Conquistas */
+.conquistas-medalhas {
+  display: flex;
+  gap: 1rem;
+  font-size: 1.75rem;
 }

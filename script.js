@@ -1,15 +1,18 @@
-const form = document.getElementById("metaForm");
-const listaMetas = document.getElementById("listaMetas");
-const historicoMetas = document.getElementById("historicoMetas");
-const imagemArvore = document.getElementById("imagemArvore");
-const divJardim = document.getElementById("jardim");
-const divMedalhas = document.getElementById("medalhas");
+// Elementos do DOM
+const form = document.querySelector(".form-meta");
+const listaMetas = document.querySelector(".lista-metas");
+const historicoMetas = document.querySelector(".lista-historico");
+const imagemArvore = document.querySelector(".imagem-arvore");
+const divJardim = document.querySelector("#jardim");
+const divMedalhas = document.querySelector(".conquistas-medalhas");
 
+// Estado
 let metas = JSON.parse(localStorage.getItem("metas")) || [];
 let historico = JSON.parse(localStorage.getItem("historico")) || [];
 let arvoreNivel = parseInt(localStorage.getItem("arvoreNivel")) || 1;
 let jardim = JSON.parse(localStorage.getItem("jardim")) || [];
 
+// Salva dados no localStorage
 function salvarDados() {
   localStorage.setItem("metas", JSON.stringify(metas));
   localStorage.setItem("historico", JSON.stringify(historico));
@@ -17,22 +20,29 @@ function salvarDados() {
   localStorage.setItem("jardim", JSON.stringify(jardim));
 }
 
+// Atualiza imagem da árvore principal
 function atualizarArvore() {
-  imagemArvore.src = `assets/images/arvore${Math.min(arvoreNivel, 5)}.png`;
+  const metasFalhadas = metas.filter(meta => meta.status === "falhou");
+  imagemArvore.src = metasFalhadas.length > 0
+    ? "assets/images/arvore_morta1.png"
+    : `assets/images/arvore${Math.min(arvoreNivel, 5)}.png`;
 }
 
+// Atualiza o jardim
 function atualizarJardim() {
   divJardim.innerHTML = "";
   jardim.forEach(arvore => {
     const container = document.createElement("div");
     container.className = "text-center";
-    container.innerHTML = 
-      `<img src="assets/images/${arvore.imagem}" class="w-20 mx-auto" />
-      <p class="text-sm text-gray-500 mt-1">🌿 ${arvore.data}</p>`;
+    container.innerHTML = `
+      <img src="assets/images/${arvore.imagem}" class="w-20 mx-auto" />
+      <p class="text-sm text-gray-500 mt-1">🌿 ${arvore.data}</p>
+    `;
     divJardim.appendChild(container);
   });
 }
 
+// Atualiza medalhas
 function atualizarMedalhas() {
   const total = jardim.length;
   const medalhas = [];
@@ -43,6 +53,7 @@ function atualizarMedalhas() {
   divMedalhas.innerHTML = medalhas.map(m => `<span>${m}</span>`).join("");
 }
 
+// Define a cor de fundo de acordo com o tipo
 function getTipoCor(tipo) {
   switch (tipo) {
     case "curto": return "bg-green-100 border-green-400";
@@ -52,104 +63,101 @@ function getTipoCor(tipo) {
   }
 }
 
+// Exibe metas pendentes
 function renderizarMetas() {
   listaMetas.innerHTML = "";
-  const hoje = new Date();
-  let metasFiltradas = [...metas];
-  const filtro = document.getElementById("filtro").value;
-  const ordenacao = document.getElementById("ordenacao").value;
-
-  if (filtro !== "todas") {
-    metasFiltradas = metasFiltradas.filter(meta =>
-      filtro === "prioridade" ? meta.prioridade : meta.tipo === filtro
-    );
-  }
-
-  if (ordenacao === "prazo") {
-    metasFiltradas.sort((a, b) => new Date(a.prazo) - new Date(b.prazo));
-  } else if (ordenacao === "tipo") {
-    metasFiltradas.sort((a, b) => a.tipo.localeCompare(b.tipo));
-  }
-
-  metasFiltradas.forEach((meta, index) => {
-    const prazo = new Date(meta.prazo);
-    const diasRestantes = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
-    const tipoCor = getTipoCor(meta.tipo);
-    const prioridadeIcone = meta.prioridade ? "🐝 " : "";
-    const opacidade = diasRestantes < 0 ? "opacity-50" : "";
-    const bordaUrgente = diasRestantes <= 2 && diasRestantes >= 0 ? "border-2 border-red-500" : "";
-
+  metas.forEach((meta, index) => {
     const li = document.createElement("li");
-    li.className = `p-4 rounded-lg shadow-sm ${tipoCor} ${opacidade} ${bordaUrgente}
-      flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2`;
-    li.innerHTML = 
-      `<div>
-        <p class="font-semibold text-lg">${prioridadeIcone}${meta.titulo}</p>
-        <p class="text-sm text-gray-700">${meta.descricao}</p>
-        <p class="text-xs text-gray-500">Prazo: ${meta.prazo}</p>
-      </div>
-      <button onclick="concluirMeta(${index})"
-        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">
-        Meta Batida
-      </button>`;
+    li.className = `${meta.tipo} border-l-4 p-4 ${getTipoCor(meta.tipo)}`;
+    li.innerHTML = `
+      <strong>${meta.titulo}</strong> <span class="text-sm">${meta.prioridade ? "🐝" : ""}</span><br>
+      <small>${meta.descricao}</small><br>
+      <small>Prazo: ${meta.prazo}</small><br>
+      <button onclick="concluirMeta(${index})" class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">Concluir</button>
+    `;
     listaMetas.appendChild(li);
   });
 }
 
+// Exibe histórico de metas concluídas
 function renderizarHistorico() {
   historicoMetas.innerHTML = "";
   historico.forEach(meta => {
     const li = document.createElement("li");
-    li.className = "p-4 rounded-lg shadow bg-gray-100 flex justify-between items-center";
+    li.className = "bg-gray-100 border-l-4 border-gray-400 p-4";
     li.innerHTML = `
-      <div>
-        <p class="font-semibold">${meta.titulo}</p>
-        <p class="text-sm text-gray-600">${meta.descricao}</p>
-        <p class="text-xs text-gray-500">Finalizada em: ${meta.finalizada}</p>
-      </div>`;
+      <strong>${meta.titulo}</strong><br>
+      <small>${meta.descricao}</small><br>
+      <small>Status: ✅ Concluída</small>
+    `;
     historicoMetas.appendChild(li);
   });
 }
 
+// Verifica se alguma meta está atrasada
+function verificarMetasConcluidas() {
+  const hoje = new Date();
+  metas = metas.map(meta => {
+    const prazo = new Date(meta.prazo);
+    if (!meta.concluida && hoje > prazo) {
+      meta.status = "falhou";
+    }
+    return meta;
+  });
+  salvarDados();
+  atualizarArvore();
+  renderizarMetas();
+}
+
+// Concluir uma meta
 function concluirMeta(index) {
   const meta = metas[index];
-  const hoje = new Date().toLocaleDateString();
-  historico.push({ ...meta, finalizada: hoje });
+  meta.concluida = true;
+  meta.status = "concluida";
+  historico.push(meta);
   metas.splice(index, 1);
-  arvoreNivel++;
 
-  if (arvoreNivel > 5) {
-    const estilos = ["comum", "florida", "frutifera", "exotica"];
-    const estilo = estilos[Math.floor(Math.random() * estilos.length)];
-    jardim.push({ data: hoje, imagem: `arvore5_${estilo}.png` });
-    arvoreNivel = 1;
-  }
+  arvoreNivel = Math.min(arvoreNivel + 1, 5);
+  jardim.push({
+    imagem: `arvore${arvoreNivel}.png`,
+    data: new Date().toLocaleDateString()
+  });
 
   salvarDados();
-  renderizarMetas();
-  renderizarHistorico();
   atualizarArvore();
   atualizarJardim();
   atualizarMedalhas();
+  renderizarMetas();
+  renderizarHistorico();
 }
 
-form.addEventListener("submit", e => {
+// Evento de envio do formulário
+form.addEventListener("submit", function (e) {
   e.preventDefault();
+
   const titulo = document.getElementById("titulo").value;
   const descricao = document.getElementById("descricao").value;
   const prazo = document.getElementById("prazo").value;
   const tipo = document.getElementById("tipo").value;
   const prioridade = document.getElementById("prioridade").checked;
-  metas.push({ titulo, descricao, prazo, tipo, prioridade });
+
+  metas.push({
+    titulo,
+    descricao,
+    prazo,
+    tipo,
+    prioridade,
+    concluida: false,
+    status: "pendente"
+  });
+
   salvarDados();
   renderizarMetas();
   form.reset();
 });
 
-document.getElementById("filtro").addEventListener("change", renderizarMetas);
-document.getElementById("ordenacao").addEventListener("change", renderizarMetas);
-
 // Inicialização
+verificarMetasConcluidas();
 renderizarMetas();
 renderizarHistorico();
 atualizarArvore();
