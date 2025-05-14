@@ -6,6 +6,36 @@ const imagemArvore = document.querySelector(".imagem-arvore");
 const divJardim = document.querySelector("#jardim");
 const divMedalhas = document.querySelector(".conquistas-medalhas");
 
+const toggleHistoricoBtn = document.getElementById("toggleHistorico");
+const containerHistorico = document.getElementById("containerHistorico");
+
+const filtroHistorico = document.getElementById("filtroHistorico"); // Filtro de histórico
+
+toggleHistoricoBtn.addEventListener("click", () => {
+  const estaVisivel = !containerHistorico.classList.contains("hidden");
+  if (estaVisivel) {
+    containerHistorico.classList.add("hidden");
+    toggleHistoricoBtn.textContent = "Mostrar Histórico ⬇";
+  } else {
+    containerHistorico.classList.remove("hidden");
+    toggleHistoricoBtn.textContent = "Esconder Histórico ⬆";
+  }
+});
+
+const toggleJardimBtn = document.getElementById("toggleJardim");
+const containerJardim = document.getElementById("containerJardim");
+
+toggleJardimBtn.addEventListener("click", () => {
+  const estaVisivel = !containerJardim.classList.contains("hidden");
+  if (estaVisivel) {
+    containerJardim.classList.add("hidden");
+    toggleJardimBtn.textContent = "Mostrar Jardim ⬇";
+  } else {
+    containerJardim.classList.remove("hidden");
+    toggleJardimBtn.textContent = "Esconder Jardim ⬆";
+  }
+});
+
 // Estado
 let metas = JSON.parse(localStorage.getItem("metas")) || [];
 let historico = JSON.parse(localStorage.getItem("historico")) || [];
@@ -22,23 +52,28 @@ function salvarDados() {
 
 // Atualiza imagem da árvore principal
 function atualizarArvore() {
-  const metasFalhadas = metas.filter(meta => meta.status === "falhou");
-  imagemArvore.src = metasFalhadas.length > 0
-    ? "assets/imagens/arvore_morta1.png"
-    : `assets/imagens/arvore${Math.min(arvoreNivel, 5)}.png`;
+  const temFalha = historico.some(meta => meta.status === "falhou" && !meta.consertada);
+
+  if (temFalha) {
+    imagemArvore.src = "assets/imagens/arvore_morta1.png"; // Árvore morta
+  } else {
+    imagemArvore.src = `assets/imagens/arvore${(arvoreNivel % 5) || 5}.png`; // Ciclo de 1 a 5
+  }
 }
 
-// Atualiza o jardim
+// Atualiza o jardim com árvores especiais (conquistas)
 function atualizarJardim() {
   divJardim.innerHTML = "";
   jardim.forEach(arvore => {
     const container = document.createElement("div");
     container.className = "text-center";
-    if (arvoreNivel === 5) {
-      container.innerHTML = `
-      <img src="assets/imagens/penai.png" class="w-20 mx-auto" />
+    container.innerHTML = `
+      <img src="assets/imagens/${arvore.imagem}" class="w-20 mx-auto" />
       <p class="text-sm text-gray-500 mt-1">🌿 ${arvore.data}</p>
     `;
+    if (divJardim.firstChild) {
+      divJardim.insertBefore(container, divJardim.firstChild);
+    } else {
       divJardim.appendChild(container);
     }
   });
@@ -84,13 +119,22 @@ function renderizarMetas() {
 // Exibe histórico de metas concluídas
 function renderizarHistorico() {
   historicoMetas.innerHTML = "";
-  historico.forEach(meta => {
+  const filtro = filtroHistorico.value;
+
+  // Filtra histórico de acordo com o filtro
+  const metasFiltradas = historico.filter(meta => {
+    if (filtro === "concluidas") return meta.status === "concluida";
+    if (filtro === "nao-concluidas") return meta.status === "falhou";
+    return true; // Exibe todas por padrão
+  });
+
+  metasFiltradas.forEach(meta => {
     const li = document.createElement("li");
-    li.className = "bg-gray-100 border-l-4 border-gray-400 p-4";
+    li.className = `p-4 ${meta.status === "falhou" ? "bg-red-100 border-red-400" : "bg-green-100 border-green-400"}`;
     li.innerHTML = `
       <strong>${meta.titulo}</strong><br>
       <small>${meta.descricao}</small><br>
-      <small>Status: ✅ Concluída</small>
+      <small>Status: ${meta.status === "falhou" ? "❌ Não Concluída" : "✅ Concluída"}</small>
     `;
     historicoMetas.insertBefore(li, historicoMetas.firstChild);
   });
@@ -99,16 +143,23 @@ function renderizarHistorico() {
 // Verifica se alguma meta está atrasada
 function verificarMetasConcluidas() {
   const hoje = new Date();
-  metas = metas.map(meta => {
+  const novasMetas = [];
+
+  metas.forEach(meta => {
     const prazo = new Date(meta.prazo);
     if (!meta.concluida && hoje > prazo) {
       meta.status = "falhou";
+      historico.push(meta); // Envia para o histórico como falhou
+    } else {
+      novasMetas.push(meta); // Ainda válida
     }
-    return meta;
   });
+
+  metas = novasMetas;
   salvarDados();
   atualizarArvore();
   renderizarMetas();
+  renderizarHistorico(); // Atualiza histórico visualmente
 }
 
 // Concluir uma meta
@@ -119,11 +170,25 @@ function concluirMeta(index) {
   historico.push(meta);
   metas.splice(index, 1);
 
-  arvoreNivel = Math.min(arvoreNivel + 1, 5);
-  jardim.push({
-    imagem: `arvore${arvoreNivel}.png`,
-    data: new Date().toLocaleDateString()
-  });
+  const tinhaFalha = historico.some(meta => meta.status === "falhou" && !meta.consertada);
+
+  if (tinhaFalha) {
+    // Marca como "corrigido"
+    historico.forEach(meta => {
+      if (meta.status === "falhou") meta.consertada = true;
+    });
+    arvoreNivel = 1; // Reinicia a árvore
+  } else {
+    arvoreNivel = (arvoreNivel % 5) + 1; // Continua loopando de 1 a 5
+  }
+
+  // Se completou ciclo, adiciona conquista especial
+  if (arvoreNivel === 1) {
+    jardim.push({
+      imagem: "penai.png", // Árvore especial (conquista)
+      data: new Date().toLocaleDateString()
+    });
+  }
 
   salvarDados();
   atualizarArvore();

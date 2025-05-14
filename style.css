@@ -86,6 +86,7 @@ h1 {
 }
 
 /* Filtros */
+
 .filtros-container {
   display: flex;
   flex-direction: column;
@@ -116,7 +117,7 @@ h1 {
 }
 
 .lista-metas li.curto {
-  background-color: #f38c85;
+  background-color: #f7a7a1;
 }
 
 .lista-metas li.medio {
