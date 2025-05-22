@@ -103,7 +103,32 @@ function getTipoCor(tipo) {
 // Exibe metas pendentes
 function renderizarMetas() {
   listaMetas.innerHTML = "";
-  metas.forEach((meta, index) => {
+
+  const filtro = document.getElementById("filtro").value;
+  const ordenacao = document.getElementById("ordenacao").value;
+
+  // Aplica filtro
+  let metasFiltradas = metas.filter(meta => {
+    if (filtro === "prioridade") return meta.prioridade;
+    if (["curto", "medio", "longo"].includes(filtro)) return meta.tipo === filtro;
+    return true; // "todas"
+  });
+
+  // Aplica ordenação
+  metasFiltradas.sort((a, b) => {
+    if (ordenacao === "prazo") {
+      return new Date(a.prazo) - new Date(b.prazo);
+    }
+    if (ordenacao === "tipo") {
+      const ordem = { curto: 1, medio: 2, longo: 3 };
+      return ordem[a.tipo] - ordem[b.tipo];
+    }
+    return 0;
+  });
+
+  // Exibe metas filtradas e ordenadas
+  metasFiltradas.forEach((meta, indexOriginal) => {
+    const index = metas.indexOf(meta); // índice real para concluirMeta()
     const li = document.createElement("li");
     li.className = `${meta.tipo} border-l-4 p-4 ${getTipoCor(meta.tipo)}`;
     li.innerHTML = `
@@ -230,3 +255,9 @@ renderizarHistorico();
 atualizarArvore();
 atualizarJardim();
 atualizarMedalhas();
+
+filtroHistorico.addEventListener("change", renderizarHistorico);
+
+document.getElementById("filtro").addEventListener("change", renderizarMetas);
+document.getElementById("ordenacao").addEventListener("change", renderizarMetas);
+
